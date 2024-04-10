@@ -31,6 +31,16 @@ stages:
       inputs:
         terraformVersion: '1.2.9'
     
+    # Try fetching ACCESS_KEY
+    
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'ACCOUNT_KEY=$(az storage account keys list --resource-group "udacity-demo3-project" --account-name "tfstate183723619" --query ''[0].value'' -o tsv)'
+        failOnStandardError: true
+    
     # Run Terraform Init on the pipeline agent 
     
     # ToDo: Replace the resource group name, storage account name, and container name below
