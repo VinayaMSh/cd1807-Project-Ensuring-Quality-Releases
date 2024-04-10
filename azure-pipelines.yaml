@@ -27,10 +27,12 @@ stages:
     steps:
     # Install Terraform on the pipeline agent 
     - task: TerraformInstaller@1
+      displayName: Terraform Install
       inputs:
         terraformVersion: 'latest'
 
     - task: TerraformTaskV4@4
+      displayName: Terraform Init
       inputs:
         provider: 'azurerm'
         command: 'init'
@@ -39,3 +41,29 @@ stages:
         backendAzureRmStorageAccountName: 'tfstate183723619'
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'test.terraform.tfstate'
+        
+    - task: TerraformTaskV4@4
+      displayName: Terraform Validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+
+
+    - task: TerraformTaskV4@4
+      displayName: Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+
+    - task: TerraformTaskV4@4
+      displayName: Terraform Apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+    - task: TerraformTaskV4@4
+      displayName: Terraform Destroy
+      inputs:
+        provider: 'azurerm'
+        command: 'destroy'
+        environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
