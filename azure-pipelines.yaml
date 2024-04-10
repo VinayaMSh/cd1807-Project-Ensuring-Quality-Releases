@@ -41,6 +41,8 @@ stages:
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         backendServiceArm: '$(azureServiceConnectionId)'
+        backendAzureRmTenantId: 'bc93efc9-87ce-4577-84ee-ed1048cfdbe2'
+        backendAzureRmSubscriptionId: 'bfe3aaca-fcaa-4cf7-8823-0ada2a27d255'
         backendAzureRmResourceGroupName: 'udacity-demo3-project'
         backendAzureRmStorageAccountName: 'tfstate183723619'
         backendAzureRmContainerName: 'tfstate'
