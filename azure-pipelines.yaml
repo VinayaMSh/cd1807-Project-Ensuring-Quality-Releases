@@ -11,11 +11,21 @@ trigger:
 # Otherwise, comment out the line below. 
 pool: myProject3AgentPool
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  python.version: '3.8.10'
+  # ToDo: Replace the service connection name as used in the DevOps project settings
+  azureServiceConnectionId: 'project3DemoServiceConn'
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)
+  # Environment name
+  environmentName: 'test'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: Build
+  jobs:
+  - job: BuildInfrastructure
+    steps:
+    # Install Terraform on the pipeline agent 
+    - task: TerraformInstaller@2
+      inputs:
+        terraformVersion: 'latest'
