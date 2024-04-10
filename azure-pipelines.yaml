@@ -11,65 +11,11 @@ trigger:
 # Otherwise, comment out the line below. 
 pool: myProject3AgentPool
 
-variables:
-  python.version: '3.8.10'
-  # ToDo: Replace the service connection name as used in the DevOps project settings
-  azureServiceConnectionId: 'project3DemoServiceConn'
-  # Project root folder. Point to the folder containing manage.py file.
-  projectRoot: $(System.DefaultWorkingDirectory)
-  # Environment name
-  environmentName: 'test'
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
 
-stages:
-- stage: Build
-  jobs:
-  - job: BuildInfrastructure
-    steps:
-    # Install Terraform on the pipeline agent 
-    - task: TerraformInstaller@2
-      displayName: 'Terrafom installation'
-      inputs:
-        terraformVersion: 'latest'
-
-    # Run Terraform Init on the pipeline agent 
-    
-    # ToDo: Replace the resource group name, storage account name, and container name below
-    - task: TerraformCLI@2
-      displayName: 'Terrafom init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: 'udacity-demo3-project'
-        backendAzureRmStorageAccountName: 'tfstate183723619'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'test.terraform.tfstate'
-
-    # Run Terraform Validate    
-    - task: TerraformCLI@2
-      displayName: Terraform validate
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
-
-    
-    # Run Terraform Apply
-    # ToDo: Change the workingDirectory path, as applicable to you
-    - task: TerraformCLI@2
-      displayName: Terraform apply
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
-
-    # Destroy the resources in Azure
-    # ToDo: Change the workingDirectory path, as applicable to you
-    - task: TerraformCLI@2
-      displayName: Terraform destroy
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'        
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
