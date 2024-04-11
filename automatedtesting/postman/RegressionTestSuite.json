@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "2766e3c8-4ed7-44a6-95a3-fc41ab9b5c43",
-		"name": "Regression-test-suite",
+		"_postman_id": "467d02f5-931c-4baf-8106-6595bd429fcc",
+		"name": "Regression-test-suite Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33828175"
 	},
@@ -28,7 +28,7 @@
 							"    pm.expect(data).to.have.property(\"name\");",
 							"    pm.expect(data).to.have.property(\"salary\");",
 							"    pm.expect(data).to.have.property(\"age\");",
-							"}",
+							"});",
 							""
 						],
 						"type": "text/javascript",
