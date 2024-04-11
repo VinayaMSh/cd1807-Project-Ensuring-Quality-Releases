@@ -52,13 +52,11 @@ stages:
       inputs:
         knownHostsEntry: 'project_demo'
         sshKeySecureFile: 'myApplicationUdacity3-VM_key.pem'
+    
     - task: TerraformTaskV4@4
-      displayName: Terraform Plan
       inputs:
         provider: 'azurerm'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        command: 'plan'
-        commandOptions: '-out=tfplan'
+        command: 'apply'
         environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
    
     - task: TerraformTaskV4@4
