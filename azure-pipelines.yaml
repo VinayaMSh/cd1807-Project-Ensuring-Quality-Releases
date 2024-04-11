@@ -47,3 +47,20 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
+        
+    - task: TerraformTaskV4@4
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+    - task: TerraformTaskV4@4
+      displayName: Terraform Apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+    - task: TerraformTaskV4@4
+      displayName: Terraform Destroy
+      inputs:
+        provider: 'azurerm'
+        command: 'destroy'
+        environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
