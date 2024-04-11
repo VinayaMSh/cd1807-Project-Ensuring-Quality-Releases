@@ -176,7 +176,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)' 
+              azureSubscription: '$(azureServiceConnectionId)'
               appName: 'myApplicationUdacity3-AppService' 
               appType: webApp
               package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip' 
