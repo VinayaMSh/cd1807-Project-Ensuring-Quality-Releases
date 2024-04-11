@@ -52,3 +52,11 @@ module "publicip" {
   resource_type    = "publicip"
   resource_group   = "${module.resource_group.resource_group_name}"
 }
+module "vm" {
+  source           = "../../modules/vm"
+  location         = "${var.location}"
+  application_type = "${var.application_type}"
+  subnet_id        = "${module.network.subnet_id_test}"
+  resource_type    = "VM"
+  resource_group   = "${module.resource_group.resource_group_name}"
+}
