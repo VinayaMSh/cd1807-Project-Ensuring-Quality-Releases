@@ -52,6 +52,7 @@ stages:
     - task: TerraformTaskV4@4
       inputs:
         provider: 'azurerm'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         command: 'plan'
         environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
    
