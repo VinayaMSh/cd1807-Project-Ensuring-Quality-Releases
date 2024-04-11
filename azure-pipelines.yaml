@@ -81,6 +81,16 @@ stages:
       inputs:
         script: 'sudo npm install -g newman'
         workingDirectory: $(System.DefaultWorkingDirectory)
+    
+    # Postman Regression Test Suite    
+    # ToDo: Verify the working directory
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run RegressionTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+
 
     # Postman Data Validation Test Suite    
     # ToDo: Verify the working directory
@@ -91,15 +101,7 @@ stages:
       inputs:
         script: 'newman run DataValidationTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    # Postman Regression Test Suite    
-    # ToDo: Verify the working directory
-    - task: CmdLine@2
-      displayName: Run Regression Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run RegressionTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-
+    
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
