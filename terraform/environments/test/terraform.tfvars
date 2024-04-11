@@ -5,7 +5,7 @@ client_secret = ""
 tenant_id = ""
 
 # Resource Group/Location
-location = ""East US"
+location = "East US"
 resource_group_name = "udacity-demo3-project"
 application_type = "myApplicationUdacity3"
 
