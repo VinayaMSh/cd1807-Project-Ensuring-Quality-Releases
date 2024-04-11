@@ -1,0 +1,49 @@
+{
+	"info": {
+		"_postman_id": "695c72a3-2f2b-4860-baf4-ef25ceed4b81",
+		"name": "DataValidation-test-suite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33828175"
+	},
+	"item": [
+		{
+			"name": "Response validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"pm.test(\"Body contains string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Rhona Davidson\");\r",
+							"});\r",
+							"pm.test(\"Body contains string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Successfully! All records has been fetched.\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/v1/employees",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
