@@ -84,6 +84,13 @@ stages:
 
     # Postman Data Validation Test Suite    
     # ToDo: Verify the working directory
+    
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run StarterAPIs.json'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     - task: CmdLine@2
       displayName: Run Data Validation Tests
       continueOnError: true
