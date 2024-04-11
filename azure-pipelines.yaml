@@ -74,3 +74,11 @@ stages:
    #     command: 'destroy'
    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+
+  - job: Build
+    steps:
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: 'sudo npm install -g newman'
+        workingDirectory: $(System.DefaultWorkingDirectory)
