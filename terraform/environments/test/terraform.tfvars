@@ -6,7 +6,7 @@ tenant_id = ""
 
 # Resource Group/Location
 location = "East US"
-resource_group_name = "udacity-demo3-project"
+resource_group_name = "RG_PROJECT3"
 application_type = "myApplicationUdacity3"
 
 # Network
