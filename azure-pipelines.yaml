@@ -16,7 +16,7 @@ variables:
   # ToDo: Replace the service connection name as used in the DevOps project settings
   azureServiceConnectionId: 'project3DemoServiceConn'
   # Project root folder. Point to the folder containing manage.py file.
-  projectRoot: $(System.DefaultWorkingDirectory)
+  projectRoot: '$(System.DefaultWorkingDirectory)/'
   # Environment name
   environmentName: 'test'
 
@@ -36,6 +36,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         backendServiceArm: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
         backendAzureRmResourceGroupName: 'udacity-demo3-project'
         backendAzureRmStorageAccountName: 'tfstate183723619'
@@ -53,11 +54,7 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
-    - task: TerraformTaskV4@4
-      displayName: Terraform Apply
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
+   
     - task: TerraformTaskV4@4
       displayName: Terraform Destroy
       inputs:
