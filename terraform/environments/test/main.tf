@@ -18,6 +18,15 @@ provider "azurerm" {
   features {}
 }
 
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "udacity-demo3-project"  
+    storage_account_name = "tfstate183723619"     
+    container_name       = "tfstate"                
+    key                  = "test.terraform.tfstate"      
+  }
+}
+
 module "resource_group" {
   source               = "../../modules/resource_group"
   resource_group       = "${var.resource_group_name}"
