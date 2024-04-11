@@ -21,7 +21,7 @@
 							"",
 							"const getData = () => pm.response.json().data;",
 							"",
-							"pm.test(\"Returns a book object\", () => {",
+							"pm.test(\"Returns a data object\", () => {",
 							"    const data = getData();",
 							"",
 							"    // Check the expected properties exist",
