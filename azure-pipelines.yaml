@@ -47,7 +47,11 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
-        
+      
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: 'project_demo'
+        sshKeySecureFile: 'myApplicationUdacity3-VM_key.pem'
     - task: TerraformTaskV4@4
       displayName: Terraform Plan
       inputs:
