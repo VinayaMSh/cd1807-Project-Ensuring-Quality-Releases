@@ -55,7 +55,7 @@ stages:
         sshKeySecureFile: 'myApplicationUdacity3-VM_key.pem'
     
     - task: TerraformTaskV4@4
-      displayName: Terraform Validate
+      displayName: Terraform Apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
