@@ -73,4 +73,5 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
