@@ -51,7 +51,7 @@ stages:
         inputs:
           azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
           WebAppName: 'myApplicationUdacity3-AppService'
-          packageForLinux: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
+          packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           enableCustomDeployment: true
           DeploymentType: zipDeploy
           TakeAppOfflineFlag: false
