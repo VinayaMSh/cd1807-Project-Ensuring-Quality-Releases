@@ -35,9 +35,15 @@ stages:
           includeRootFolder: false
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           verbose: true
-      - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+
+      
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+          ArtifactName: 'drop-fakerestapi'
+          publishLocation: 'Container'
         displayName: 'Upload Package'
-        artifact: drop-fakerestapi
+        
 
         
       - task: AzureRmWebAppDeployment@4
