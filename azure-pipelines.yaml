@@ -65,7 +65,7 @@ stages:
               azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'     # ToDo
               appName: 'myApplicationUdacity3-AppService'               # ToDo
               appType: webApp
-              package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'  
+              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'  
   #--------------------------------------------#  
 
     #--------------------------------------------#    
