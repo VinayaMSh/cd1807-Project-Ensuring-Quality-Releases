@@ -20,7 +20,8 @@ variables:
   environmentName: 'test'
 
 stages:
-- stage: Build
+- stage: Infrastructure
+  displayName: Provide Infrastructure 
   jobs:
   - job: BuildInfrastructure
     steps:
