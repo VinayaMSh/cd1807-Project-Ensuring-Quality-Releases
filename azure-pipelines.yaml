@@ -58,7 +58,7 @@ stages:
     strategy:
       runOnce:
         deploy:
-         
+        
           steps:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
