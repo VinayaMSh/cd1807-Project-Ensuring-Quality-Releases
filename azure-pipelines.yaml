@@ -10,6 +10,7 @@ trigger:
 # Otherwise, comment out the line below. 
 pool: myProject3AgentPool
 
+
 variables:
   python.version: '3.8.10'
   # ToDo: Replace the service connection name as used in the DevOps project settings
@@ -44,17 +45,28 @@ stages:
           publishLocation: 'Container'
         displayName: 'Upload Package'
         
-
-        
-      - task: AzureRmWebAppDeployment@4
-        displayName: 'Azure App Service Deploy: udacity-AppService'
-        inputs:
-          azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
-          WebAppName: 'myApplicationUdacity3-AppService'
-          packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-          enableCustomDeployment: true
-          DeploymentType: 'runFromZip'
-          TakeAppOfflineFlag: false
+  #--------------------------------------------#  
+# DEPLOYMENT STAGE
+#--------------------------------------------#    
+- stage: Deploy
+  jobs:
+  #--------------------------------------------#  
+  # Deploy FakeRestAPI Web App
+  # ToDo: Provide <environment name> you created in your DevOps project
+  - deployment: FakeRestAPI
+    pool: myProject3AgentPool 
+    environment: 'test-vm'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App'
+            inputs:
+              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'     # ToDo
+              appName: 'myApplicationUdacity3-AppService'               # ToDo
+              appType: webApp
+              package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'  
   #--------------------------------------------#  
 
     #--------------------------------------------#    
