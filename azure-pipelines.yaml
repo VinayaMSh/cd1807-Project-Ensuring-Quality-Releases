@@ -20,183 +20,32 @@ variables:
   environmentName: 'test'
 
 stages:
-- stage: Infrastructure
-  displayName: Provide Infrastructure 
-  jobs:
-  - job: BuildInfrastructure
-    steps:
-    # Install Terraform on the pipeline agent 
-    - task: TerraformInstaller@1
-      displayName: Terraform Install
-      inputs:
-        terraformVersion: '1.2.9'
 
-    - task: TerraformTaskV4@4
-      displayName: Terraform Init
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: 'udacity-demo3-project'
-        backendAzureRmStorageAccountName: 'tfstate183723619'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'test.terraform.tfstate'
-        
-    - task: TerraformTaskV4@4
-      displayName: Terraform Validate
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
-      
-    - task: InstallSSHKey@0
-      inputs:
-        knownHostsEntry: 'project_demo'
-        sshKeySecureFile: 'linux-test_key.pem'
-    
-    - task: TerraformTaskV4@4
-      displayName: Terraform Apply
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: 'udacity-demo3-project'
-        backendAzureRmStorageAccountName: 'tfstate183723619'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'test.terraform.tfstate'
-    
-   # - task: TerraformTaskV4@4
-   #   displayName: Terraform Destroy
-   #   inputs:
-   #     provider: 'azurerm'
-   #     command: 'destroy'
-   #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-   #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+  - stage: Deploy_Fakerestapi
+    jobs:
+      - job: Deploy_Fakerestapi
+        displayName: 'Build and Deploy Fakerestapi'
+        pool: myProject3AgentPool
+        steps:
+        - task: ArchiveFiles@2
+          displayName: 'Archive Fakerestapi'
+          inputs:
+            rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+            includeRootFolder: false
+            archiveFile: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
+            verbose: true
+        - task: AzureRmWebAppDeployment@4
+          displayName: 'Azure App Service Deploy: udacity-AppService'
+          inputs:
+            azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+            WebAppName: 'myApplicationUdacity3-AppService'
+            packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
+            enableCustomDeployment: true
+            DeploymentType: zipDeploy
+            TakeAppOfflineFlag: false
 
-   # Postman - Install Newman    
-    - task: CmdLine@2
-      displayName: Install Newman
-      inputs:
-        script: 'sudo npm install -g newman'
-        workingDirectory: $(System.DefaultWorkingDirectory)
-   
-    # Postman Data Validation Test Suite    
-    # ToDo: Verify the working directory
-      
-    - task: CmdLine@2
-      displayName: Run Data Validation Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run DataValidationTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-     
-    # Postman Regression Test Suite    
-    # ToDo: Verify the working directory
-    - task: CmdLine@2
-      displayName: Run Regression Tests
-      continueOnError: true
-      inputs:
-        script: 'newman run RegressionTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-*.xml'
-        searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-        mergeTestResults: true
-        testRunTitle: 'PostmanTests'
-
-     #--------------------------------------------#
-    # Selenium (UI) Test Suite - Archive the package  
-    # "ArchiveFiles@2" picks up the web package and archives it.
-    - task: ArchiveFiles@2
-      displayName: 'Archive UI Tests'
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
-    # Selenium Test Suite - Publish the package  
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
-      displayName: 'Upload Package'
-      artifact: drop-uitests
-
-    #--------------------------------------------#  
-
-     #--------------------------------------------#    
+    #--------------------------------------------#    
     # FakeRestAPI - Archive
-    # ToDo: Complete the ArchiveFiles@2 task and publish step 
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
-
-    #--------------------------------------------#  
-    # JMeter (Performance) Test Suite - Archive
-    # ToDo: Complete the ArchiveFiles@2 task and publish step 
-    - task: ArchiveFiles@2
-      displayName: 'Archive PerformanceTestSuite'
-      inputs:
-        rootFolderOrFile: 
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
-    # JMeter Test Suite - Publish    
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
-      displayName: 'Upload Package'
-      artifact: drop-perftests
-
-- stage: AddDelay
-  jobs:
-  - job: ExecuteDelay
-    pool: server
-    steps:
-    - task: Delay@1
-      inputs:
-        delayForMinutes: '3'
-
-
-#--------------------------------------------#  
-# DEPLOYMENT STAGE
-#--------------------------------------------#    
-- stage: Deploy
-  jobs:
-  #--------------------------------------------#  
-  # Deploy FakeRestAPI Web App
-  # ToDo: Provide <environment name> you created in your DevOps project
-  - deployment: FakeRestAPI
-    pool: myProject3AgentPool    
-    environment: 'test-vm'  
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          #- task: AzureWebApp@1
-          #  displayName: 'Deploy Azure Web App'
-          #  inputs:
-          #    azureSubscription: '$(azureServiceConnectionId)'
-          #    resourceGroupName: 'RG_PROJECT3'
-          #    appName: 'myApplicationUdacity3-AppService' 
-          #    appType: 'webApp'
-          #    package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip' 
-           - task: AzureRmWebAppDeployment@4
-             inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'project3DemoServiceConn'
-              ResourceGroupName: 'RG_PROJECT3'
-              appType: 'webAppLinux'
-              WebAppName: 'myApplicationUdacity3-AppService'
-              packageForLinux: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
-          #--------------------------------------------#    
+   
          
         
