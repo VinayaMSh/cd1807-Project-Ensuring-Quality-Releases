@@ -191,6 +191,11 @@ stages:
               targetType: 'inline'
               script: |
                 #! /bin/bash
-                echo 'Hello from a custom VM with pre-installed Selenium, Chromium-browser & Chromedriver!'
+                echo '### A manually created VM ######'
+                sudo apt-get upgrade -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                pip3 install selenium
           
    
