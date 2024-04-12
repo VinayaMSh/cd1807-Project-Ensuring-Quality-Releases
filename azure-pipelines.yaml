@@ -53,7 +53,7 @@ stages:
           WebAppName: 'myApplicationUdacity3-AppService'
           packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           enableCustomDeployment: true
-          DeploymentType: zipDeploy
+          DeploymentType: 'runFromZip'
           TakeAppOfflineFlag: false
   #--------------------------------------------#  
 
