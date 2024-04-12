@@ -10,7 +10,6 @@ trigger:
 # Otherwise, comment out the line below. 
 pool: myProject3AgentPool
 
-
 variables:
   python.version: '3.8.10'
   # ToDo: Replace the service connection name as used in the DevOps project settings
@@ -21,6 +20,111 @@ variables:
   environmentName: 'test'
 
 stages:
+- stage: Build
+  jobs:
+  - job: BuildInfrastructure
+    steps:
+    # Install Terraform on the pipeline agent 
+    - task: TerraformInstaller@1
+      displayName: Terraform Install
+      inputs:
+        terraformVersion: '1.2.9'
+
+    - task: TerraformTaskV4@4
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        backendServiceArm: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+        backendAzureRmResourceGroupName: 'udacity-demo3-project'
+        backendAzureRmStorageAccountName: 'tfstate183723619'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'test.terraform.tfstate'
+        
+    - task: TerraformTaskV4@4
+      displayName: Terraform Validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+      
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: 'project_demo'
+        sshKeySecureFile: 'linux-test_key.pem'
+    
+    - task: TerraformTaskV4@4
+      displayName: Terraform Apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        backendServiceArm: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+        backendAzureRmResourceGroupName: 'udacity-demo3-project'
+        backendAzureRmStorageAccountName: 'tfstate183723619'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'test.terraform.tfstate'
+    
+   # - task: TerraformTaskV4@4
+   #   displayName: Terraform Destroy
+   #   inputs:
+   #     provider: 'azurerm'
+   #     command: 'destroy'
+   #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+   #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+
+   # Postman - Install Newman    
+    - task: CmdLine@2
+      displayName: Install Newman
+      inputs:
+        script: 'sudo npm install -g newman'
+        workingDirectory: $(System.DefaultWorkingDirectory)
+   
+    # Postman Data Validation Test Suite    
+    # ToDo: Verify the working directory
+      
+    - task: CmdLine@2
+      displayName: Run Data Validation Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run DataValidationTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+     
+    # Postman Regression Test Suite    
+    # ToDo: Verify the working directory
+    - task: CmdLine@2
+      displayName: Run Regression Tests
+      continueOnError: true
+      inputs:
+        script: 'newman run RegressionTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+        mergeTestResults: true
+        testRunTitle: 'PostmanTests'
+
+     #--------------------------------------------#
+    # Selenium (UI) Test Suite - Archive the package  
+    # "ArchiveFiles@2" picks up the web package and archives it.
+    - task: ArchiveFiles@2
+      displayName: 'Archive UI Tests'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
+    # Selenium Test Suite - Publish the package  
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
+      displayName: 'Upload Package'
+      artifact: drop-uitests
+
+    #--------------------------------------------#  
 
 # ------------------------------------------#    
 - stage: Deploy_FakeRestAPI
