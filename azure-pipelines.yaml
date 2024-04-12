@@ -193,6 +193,7 @@ stages:
              inputs:
               ConnectionType: 'AzureRM'
               azureSubscription: 'project3DemoServiceConn'
+              ResourceGroupName: 'RG_PROJECT3'
               appType: 'webAppLinux'
               WebAppName: 'myApplicationUdacity3-AppService'
               packageForLinux: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
