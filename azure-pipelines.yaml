@@ -107,7 +107,7 @@ stages:
         mergeTestResults: true
         testRunTitle: 'PostmanTests'
 
-     #--------------------------------------------#
+#--------------------------------------------#
     # Selenium (UI) Test Suite - Archive the package  
     # "ArchiveFiles@2" picks up the web package and archives it.
     - task: ArchiveFiles@2
@@ -122,7 +122,7 @@ stages:
       displayName: 'Upload Package'
       artifact: drop-uitests
 
-    #--------------------------------------------#  
+#--------------------------------------------#  
 
 # ------------------------------------------#    
 - stage: BuildFakeRestAPI
@@ -169,6 +169,7 @@ stages:
               appType: 'webAppLinux'
               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip' 
 
+
           - task: AzureRmWebAppDeployment@4
             inputs:
              ConnectionType: 'AzureRM'
@@ -177,3 +178,19 @@ stages:
              WebAppName: 'myApplicationUdacity3-AppService'
              packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
         
+  #--------------------------------------------#  
+  # Selenium | Functional UI Tests
+  - deployment: VMDeploy
+    displayName: Selenium Tests
+    environment:
+      name: 'test-vm'
+      resourceType: VirtualMachine
+      tags: selenium
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop-ui-tests
+          
+   
