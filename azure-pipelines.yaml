@@ -83,8 +83,6 @@ stages:
         workingDirectory: $(System.DefaultWorkingDirectory)
    
     # Postman Data Validation Test Suite    
-    # ToDo: Verify the working directory
-      
     - task: CmdLine@2
       displayName: Run Data Validation Tests
       continueOnError: true
@@ -127,10 +125,10 @@ stages:
     #--------------------------------------------#  
 
 # ------------------------------------------#    
-- stage: Deploy_FakeRestAPI
+- stage: BuildFakeRestAPI
   jobs:
-    - job: Deploy_Fakerestapi
-      displayName: 'Build and Deploy Fakerestapi'
+    - job: BuildFakeRestapi
+      displayName: 'Build and upload Fakerestapi'
       pool: myProject3AgentPool
       steps:
       - task: ArchiveFiles@2
@@ -148,14 +146,13 @@ stages:
           ArtifactName: 'drop-fakerestapi'
         displayName: 'Upload Package'
         
-  #--------------------------------------------#  
+#--------------------------------------------#  
 # DEPLOYMENT STAGE
 #--------------------------------------------#    
 - stage: Deploy
   jobs:
   #--------------------------------------------#  
   # Deploy FakeRestAPI Web App
-  # ToDo: Provide <environment name> you created in your DevOps project
   - deployment: FakeRestAPI
     pool: myProject3AgentPool 
     environment: 'test-vm'
@@ -167,19 +164,16 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'     # ToDo
-              appName: 'myApplicationUdacity3-AppService'               # ToDo
+              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'  
+              appName: 'myApplicationUdacity3-AppService'      
               appType: 'webAppLinux'
               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip' 
 
-
-  #--------------------------------------------#  
-
-        #  - task: AzureRmWebAppDeployment@4
-        #    inputs:
-        #     ConnectionType: 'AzureRM'
-        #     azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
-        #     appType: 'webAppLinux'
-        #     WebAppName: 'myApplicationUdacity3-AppService'
-        #     packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+             ConnectionType: 'AzureRM'
+             azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+             appType: 'webAppLinux'
+             WebAppName: 'myApplicationUdacity3-AppService'
+             packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
         
