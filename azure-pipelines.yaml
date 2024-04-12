@@ -34,13 +34,13 @@ stages:
         inputs:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
           includeRootFolder: false
-          archiveFile: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           verbose: true
 
       
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: '$(System.DefaultWorkingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           ArtifactName: 'drop-fakerestapi'
         displayName: 'Upload Package'
         
@@ -77,5 +77,5 @@ stages:
              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
              appType: 'webAppLinux'
              WebAppName: 'myApplicationUdacity3-AppService'
-             packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+             packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
         
