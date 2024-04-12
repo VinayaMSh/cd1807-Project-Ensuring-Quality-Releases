@@ -32,15 +32,15 @@ stages:
       - task: ArchiveFiles@2
         displayName: 'Archive Fakerestapi'
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi/*'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
           includeRootFolder: false
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
           verbose: true
 
       
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+          PathtoPublish: '$(System.DefaultWorkingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           ArtifactName: 'drop-fakerestapi'
         displayName: 'Upload Package'
         
@@ -60,14 +60,22 @@ stages:
         deploy:
         
           steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'     # ToDo
-              appName: 'myApplicationUdacity3-AppService'               # ToDo
-              appType: 'webAppLinux'
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'  
+          #- task: AzureWebApp@1
+          #  displayName: 'Deploy Azure Web App'
+          #  inputs:
+          #    azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'     # ToDo
+          #    appName: 'myApplicationUdacity3-AppService'               # ToDo
+          #    appType: 'webAppLinux'
+          #    package: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip' 
+
+
   #--------------------------------------------#  
 
-         
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+             ConnectionType: 'AzureRM'
+             azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'
+             appType: 'webAppLinux'
+             WebAppName: 'myApplicationUdacity3-AppService'
+             packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId)-fakerestapi.zip'
         
