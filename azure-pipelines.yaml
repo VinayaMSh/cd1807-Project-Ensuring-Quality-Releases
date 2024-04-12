@@ -173,8 +173,9 @@ stages:
   # Selenium | Functional UI Tests
   - deployment: VMDeploy
     displayName: Selenium Tests
+    pool: myProject3AgentPool 
     environment:
-      name: 'test'
+      name: 'test-vm'
       resourceType: VirtualMachine
     strategy:
       runOnce:
