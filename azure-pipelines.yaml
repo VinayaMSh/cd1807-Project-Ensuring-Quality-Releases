@@ -42,7 +42,6 @@ stages:
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
           ArtifactName: 'drop-fakerestapi'
-          publishLocation: 'Container'
         displayName: 'Upload Package'
         
   #--------------------------------------------#  
