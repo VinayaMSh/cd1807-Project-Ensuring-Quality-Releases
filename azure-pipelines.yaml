@@ -132,7 +132,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
-        rootFolderOrFile: 
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/jmeter/fakeretspi'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
@@ -177,6 +177,6 @@ stages:
               azureSubscription: '$(azureServiceConnectionId)'
               appName: 'myApplicationUdacity3-AppService' 
               appType: webApp
-              package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip' 
+              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip' 
           #--------------------------------------------#    
          
