@@ -58,14 +58,21 @@ stages:
     strategy:
       runOnce:
         deploy:
+         
           steps:
+
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              source: 'current'
+              artifact: 'drop-fakerestapi'
+              path: '$(Pipeline.Workspace)'
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
               azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'     # ToDo
               appName: 'myApplicationUdacity3-AppService'               # ToDo
               appType: 'webAppLinux'
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'  
+              package: '$(Pipeline.Workspace)/**/*$(Build.BuildId)-fakerestapi.zip'  
   #--------------------------------------------#  
 
          
