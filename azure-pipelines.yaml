@@ -52,7 +52,7 @@ stages:
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: 'project_demo'
-        sshKeySecureFile: 'linux-test_key.pem'
+        sshKeySecureFile: 'linuxVM-project3_key.pem'
     
     - task: TerraformTaskV4@4
       displayName: Terraform Apply
