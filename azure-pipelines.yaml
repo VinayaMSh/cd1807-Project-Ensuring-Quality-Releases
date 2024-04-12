@@ -17,7 +17,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: '$(System.DefaultWorkingDirectory)'
   # Environment name
-  environmentName: 'test'
+  environmentName: 'testEnv'
 
 stages:
 - stage: Build
@@ -175,7 +175,7 @@ stages:
     displayName: Selenium Tests
     pool: myProject3AgentPool 
     environment:
-      name: 'test-vm'
+      name: 'test'
       resourceType: VirtualMachine
     strategy:
       runOnce:
