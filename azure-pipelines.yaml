@@ -107,9 +107,9 @@ stages:
     - task: CmdLine@2
       inputs:
           script: |
-                wget "https://apache.mirrors.lucidnetworks.net//jmeter/binaries/apache-jmeter-5.2.1.tgz"
-                tar -xf apache-jmeter-5.2.1.tgz
-                ./apache-jmeter-5.2.1/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
+                wget "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz"
+                tar -xf apache-jmeter-5.6.3.tgz
+                ./apache-jmeter-5.6.3/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
                 cat jmeter.log                                                                       
           workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter/performancetests  
 
