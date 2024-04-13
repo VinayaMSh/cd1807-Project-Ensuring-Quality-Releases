@@ -90,7 +90,7 @@ stages:
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
-        script: 'newman run RegressionTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+        script: 'newman run RegressionTestSuite.json -e TestEnv.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     
     # Postman publish test results
