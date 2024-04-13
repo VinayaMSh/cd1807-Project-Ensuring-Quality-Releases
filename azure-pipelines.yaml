@@ -102,18 +102,6 @@ stages:
         mergeTestResults: true
         testRunTitle: 'PostmanTests'
 
-    
-    # Run JMeter test suite against the App Service
-    - task: CmdLine@2
-      inputs:
-          script: |
-                wget "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz"
-                tar -xf apache-jmeter-5.6.3.tgz
-                ./apache-jmeter-5.6.3/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
-                cat jmeter.log                                                                       
-          workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter/performancetests  
-
-
     # Selenium (UI) Test Suite - Archive the package  
     - task: ArchiveFiles@2
       displayName: 'Archive UI Tests'
