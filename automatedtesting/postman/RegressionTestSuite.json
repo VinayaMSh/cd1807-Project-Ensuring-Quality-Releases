@@ -13,13 +13,14 @@
 				{
 					"listen": "test",
 					"script": {
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							""
-						]
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -27,12 +28,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/get",
+					"raw": "{{url}}/posts",
 					"host": [
-						"{{baseUrl}}"
+						"{{url}}"
 					],
 					"path": [
-						"get"
+						"posts"
 					]
 				},
 				"description": "The test on this request asserts that the reponse has a \"200 OK\" status.\n\nYou can check for any HTTP status code using the same mechanism, for example `pm.response.to.have.status(403)` if your API should return an \"Unauthorized\" response."
@@ -45,14 +46,15 @@
 				{
 					"listen": "test",
 					"script": {
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Verify response time is less than 5 seconds\", function () {",
 							"    const fiveSecondsMs = 5_000; // 5 seconds in milliseconds",
 							"    pm.expect(pm.response.responseTime).to.be.below(fiveSecondsMs);",
 							"});",
 							""
-						]
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -64,7 +66,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"foo\": \"bar\"\n}\n",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -72,12 +74,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/get",
+					"raw": "{{url}}/posts",
 					"host": [
-						"{{baseUrl}}"
+						"{{url}}"
 					],
 					"path": [
-						"get"
+						"posts"
 					]
 				},
 				"description": "This request has a test asserting that a response is received within a specific time limit (in this case 5 seconds). This is useful for ensuring consistent API performance.\n\nYou can access details of the response, such as response time, on the `pm.response` object. See the [response object documentation](https://learning.postman.com/docs/writing-scripts/script-references/postman-sandbox-api-reference/#scripting-with-response-data) for other properties available."
@@ -91,7 +93,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Verify response headers have expected values\", function () {",
+							"pm.test(\"Verify response headers have expected values \", function () {",
 							"    pm.expect(pm.response.headers.get(\"Transfer-encoding\")).to.exist;",
 							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\")",
 							"    pm.expect(pm.response.headers.get(\"Transfer-Encoding\")).to.contains(\"chunked\");",
