@@ -224,7 +224,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                ./apache-jmeter-5.6.3/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
+                ~/apache-jmeter-5.6.3/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
                 cat jmeter.log 
           
    
