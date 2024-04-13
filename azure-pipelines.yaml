@@ -211,7 +211,6 @@ stages:
               targetType: 'inline'
               script: |
                 unzip -o $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
-                sudo mkdir /var/logs
                 python3 login_add_remove.py > seleniumTests.log
              
           
