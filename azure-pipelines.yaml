@@ -86,14 +86,14 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
      
     # Postman Regression Test Suite    
-    # ToDo: Verify the working directory
     - task: CmdLine@2
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
         script: 'newman run RegressionTestSuite.json -e Demo3.env.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-
+    
+    # Postman publish test results
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
@@ -102,9 +102,21 @@ stages:
         mergeTestResults: true
         testRunTitle: 'PostmanTests'
 
-#--------------------------------------------#
+    # Jmeter tests - Archive the package
+    - task: ArchiveFiles@2
+      displayName: 'Archive PerformanceTestSuite'
+      inputs:
+        rootFolderOrFile: 
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
+    # JMeter Test Suite - Publish    
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+      displayName: 'Upload Package'
+      artifact: drop-perftests
+
+
     # Selenium (UI) Test Suite - Archive the package  
-    # "ArchiveFiles@2" picks up the web package and archives it.
     - task: ArchiveFiles@2
       displayName: 'Archive UI Tests'
       inputs:
@@ -112,7 +124,7 @@ stages:
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
-  
+    # Selenium test publish
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip  
       displayName: 'Upload Package'
       artifact: drop-uitests
