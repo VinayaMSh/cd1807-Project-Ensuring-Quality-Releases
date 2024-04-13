@@ -1,47 +1,70 @@
 {
 	"info": {
-		"_postman_id": "467d02f5-931c-4baf-8106-6595bd429fcc",
-		"name": "Regression-test-suite Copy",
+		"_postman_id": "ba51880d-6c34-41fe-bb5a-d72b7faf4c3c",
+		"name": "Regression-testingV1",
+		"description": "# 🧪 Get started here\n\nThis template helps ensure your API continues to work as expected after updates or changes. It contains sample requests for a series of tests that validate different aspects of an API, including:\n\n1. **Status code verification:** We'll check if the API returns the expected status codes for various requests, ensuring reliability and proper error handling.\n2. **JSON schema verification:** We'll make sure the JSON response conforms to a specified JSON Schema, ensuring API contracts are honored.\n3. **Response time verification:** We'll verify that the API's response time is within the acceptable range, providing a smooth user experience and optimizing performance.\n4. **Response body verification:** We'll validate the structure and content of the response body for accuracy, ensuring the integrity of the data and preventing potential issues downstream.\n5. **Header verification:** We'll confirm the presence and correct values of specific headers in the response, enabling secure and well-structured communication between your app and its users.\n    \n\n## 🔖 **How to use this template**\n\n**Step 1:** Send the sample requests and view the response and test results.\n\n**Step 2:** Replace the sample request URLs with your desired API endpoints.\n\n**Step 3:** Customize the tests in the \"Tests\" tab if needed. Don't forget to save your changes.\n\n**Step 4:** Run the collection by selecting \"Run\".\n\n<img src=\"https://content.pstmn.io/666cfa65-6e00-4308-871b-f831128bc0ac/Y29sbGVjdGlvbi1ydW5uZXItYnV0dG9uLmpwZWc=\" width=\"246\" height=\"102\">\n\n### ℹ️ Resources\n\n[Scripting in Postman](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)\n\n[Test script examples](https://learning.postman.com/docs/writing-scripts/script-references/test-examples/)\n\n[Postman Sandbox API reference](https://learning.postman.com/docs/sending-requests/grpc/postman-sandbox-api/#writing-assertions)\n\n[Using the Collection Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33828175"
 	},
 	"item": [
 		{
-			"name": "Create Employee",
+			"name": "Status code verification",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
+						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
-							"});",
-							"var json = pm.response.json();",
-							"pm.environment.set(\"id\", json.data.id);",
-							"",
-							"const getData = () => pm.response.json().data;",
-							"",
-							"pm.test(\"Returns a data object\", () => {",
-							"    const data = getData();",
-							"",
-							"    // Check the expected properties exist",
-							"    pm.expect(data).to.have.property(\"name\");",
-							"    pm.expect(data).to.have.property(\"salary\");",
-							"    pm.expect(data).to.have.property(\"age\");",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});",
 							""
-						],
-						"type": "text/javascript",
-						"packages": {}
+						]
 					}
 				}
 			],
 			"request": {
-				"method": "POST",
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/get",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"get"
+					]
+				},
+				"description": "The test on this request asserts that the reponse has a \"200 OK\" status.\n\nYou can check for any HTTP status code using the same mechanism, for example `pm.response.to.have.status(403)` if your API should return an \"Unauthorized\" response."
+			},
+			"response": []
+		},
+		{
+			"name": "Response time verification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Verify response time is less than 5 seconds\", function () {",
+							"    const fiveSecondsMs = 5_000; // 5 seconds in milliseconds",
+							"    pm.expect(pm.response.responseTime).to.be.below(fiveSecondsMs);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{name}}\",\n    \"salary\": \"{{salary}}\",\n    \"age\": \"{{age}}\"\n}",
+					"raw": "{\n    \"foo\": \"bar\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,66 +72,30 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/v1/create",
+					"raw": "{{baseUrl}}/get",
 					"host": [
-						"{{url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
-						"api",
-						"v1",
-						"create"
+						"get"
 					]
-				}
+				},
+				"description": "This request has a test asserting that a response is received within a specific time limit (in this case 5 seconds). This is useful for ensuring consistent API performance.\n\nYou can access details of the response, such as response time, on the `pm.response` object. See the [response object documentation](https://learning.postman.com/docs/writing-scripts/script-references/postman-sandbox-api-reference/#scripting-with-response-data) for other properties available."
 			},
 			"response": []
 		},
 		{
-			"name": "Get All Employees and Verify status code",
+			"name": "Header verification",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
+							"pm.test(\"Verify response headers have expected values\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Transfer-encoding\")).to.exist;",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\")",
+							"    pm.expect(pm.response.headers.get(\"Transfer-Encoding\")).to.contains(\"chunked\");",
 							"});",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}/api/v1/employees",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"employees"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Verify Header",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Verify response headers have expected values\", function () {\r",
-							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-							"    pm.expect(pm.response.headers.get(\"Content-Length\")).to.exist;\r",
-							"});\r",
 							""
 						],
 						"type": "text/javascript",
@@ -116,22 +103,60 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{url}}/api/v1/employees",
+					"raw": "{{url}}/posts",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
-						"v1",
-						"employees"
+						"posts"
 					]
-				}
+				},
+				"description": "This request has a test asserting that certain response headers are present or have an expected value.\n\nYou can access details of the response, such as headers, on the `pm.response` object. See the [response object documentation](https://learning.postman.com/docs/writing-scripts/script-references/postman-sandbox-api-reference/#scripting-with-response-data) for other properties available."
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://postman-echo.com",
+			"type": "string"
 		}
 	]
 }
