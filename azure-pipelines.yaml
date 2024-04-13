@@ -114,6 +114,17 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
       displayName: 'Upload Package'
       artifact: drop-perftests 
+  
+               # Run JMeter test suite against the App Service
+    - task: CmdLine@2
+      inputs:
+          script: |
+                wget "https://apache.mirrors.lucidnetworks.net//jmeter/binaries/apache-jmeter-5.2.1.tgz"
+                tar -xf apache-jmeter-5.2.1.tgz
+                unzip -o $(Pipeline.Workspace)/drop-perftests/$(Build.BuildId)-perftests.zip -d .
+                ./apache-jmeter-5.2.1/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
+                cat jmeter.log                                                                       
+         # workingDirectory: $(Pipeline.Workspace)/drop-perftests/<artifact>  
 
 
     # Selenium (UI) Test Suite - Archive the package  
