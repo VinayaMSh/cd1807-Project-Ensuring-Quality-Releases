@@ -201,7 +201,7 @@ stages:
                 unzip -o $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
                 sudo mkdir /var/logs
                 python3 login_add_remove.py > seleniumTests.log
-                sudo mv seleniumTests /var/logs
+                sudo mv seleniumTests.log /var/logs
           
    
   
