@@ -1,0 +1,15 @@
+{
+	"id": "3c3ab38b-218e-4302-891e-64cc6f69292a",
+	"name": "TestEnv",
+	"values": [
+		{
+			"key": "url",
+			"value": "https://jsonplaceholder.typicode.com/",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2024-04-13T20:00:30.192Z",
+	"_postman_exported_using": "Postman/10.24.17"
+}
