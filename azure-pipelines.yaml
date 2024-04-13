@@ -6,17 +6,12 @@ name: Azure Pipelines
 trigger:
 - none
 
-# ToDo: Replace the agent pool name, if you are using Udacity Cloud lab. 
-# Otherwise, comment out the line below. 
 pool: myProject3AgentPool
 
 variables:
   python.version: '3.8.10'
-  # ToDo: Replace the service connection name as used in the DevOps project settings
   azureServiceConnectionId: 'project3DemoServiceConn'
-  # Project root folder. Point to the folder containing manage.py file.
   projectRoot: '$(System.DefaultWorkingDirectory)'
-  # Environment name
   environmentName: 'testEnv'
 
 stages:
@@ -117,8 +112,8 @@ stages:
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
-    # Selenium Test Suite - Publish the package  
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
+  
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip  
       displayName: 'Upload Package'
       artifact: drop-uitests
 
