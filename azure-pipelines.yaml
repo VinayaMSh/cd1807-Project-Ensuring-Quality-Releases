@@ -228,7 +228,6 @@ stages:
               script: |
                 wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
                 tar -xzf apache-jmeter-5.6.3.tgz
-                ls -al apache-jmeter-5.6.3
               
           - task: Bash@3
             displayName: "Run Stress Tests"
@@ -238,6 +237,7 @@ stages:
               script: |
                 export PATH=apache-jmeter-5.6.3/bin:$PATH
                 jmeter.sh --version
+                jmeter.sh -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
              
    
   
