@@ -218,8 +218,13 @@ stages:
           - download: current
             displayName: 'Download Jmeter performance tests'
             artifact: drop-perftests
-          - task: Bash@3
 
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: '8'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+          - task: Bash@3
             displayName: 'Jmeter tests'
             inputs:
               targetType: 'inline'
