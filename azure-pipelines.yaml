@@ -128,6 +128,16 @@ stages:
       displayName: 'Upload Package'
       artifact: drop-perftests
 
+     # Run JMeter test suite against the App Service
+    - task: CmdLine@2
+      inputs:
+          script: |
+                wget "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz"
+                tar -xf apache-jmeter-5.6.3.tgz
+                ./apache-jmeter-5.6.3/bin/jmeter -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
+                cat jmeter.log                                                                       
+          workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter/performancetests    
+
 #--------------------------------------------#  
 
 # ------------------------------------------#    
@@ -219,11 +229,7 @@ stages:
             displayName: 'Download Jmeter performance tests'
             artifact: drop-perftests
 
-          - task: JavaToolInstaller@0
-            inputs:
-              versionSpec: '8'
-              jdkArchitectureOption: 'x64'
-              jdkSourceOption: 'PreInstalled'
+          
           - task: Bash@3
             displayName: 'Jmeter tests'
             inputs:
