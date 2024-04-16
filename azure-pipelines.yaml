@@ -181,7 +181,7 @@ stages:
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
   - deployment: VMDeploy
-    displayName: Selenium Tests
+    displayName: Tests
     pool: myProject3AgentPool 
     environment:
       name: 'test'
@@ -235,15 +235,22 @@ stages:
                 tar -xzf apache-jmeter-5.6.3.tgz
               
           - task: Bash@3
-            displayName: "Run Jmeter Tests"
+            displayName: "Run Jmeter endurance Tests"
             inputs:
               targetType: 'inline'
 
               script: |
                 export PATH=apache-jmeter-5.6.3/bin:$PATH
                 jmeter.sh --version
-                mkdir -p endurance_report
-                jmeter.sh -n -t Endurance-test.jmx -l result.csv -j jmeter.log -e -o endurance_report
+                jmeter.sh -n -t Endurance-test.jmx -l enduranceResult.csv -j endurance_jmeter.log -e -o endurance_report
+
+          - task: Bash@3
+            displayName: "Run Jmeter stress Tests"
+            inputs:
+              targetType: 'inline'
+
+              script: |
+                jmeter.sh -n -t StressTestSuite.jmx -l stressResult.csv -j stress_jmeter.log -e -o stress_report      
              
    
   
