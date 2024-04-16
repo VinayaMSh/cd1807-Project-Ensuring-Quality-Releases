@@ -223,6 +223,7 @@ stages:
             displayName: 'Jmeter tests'
             inputs:
               targetType: 'inline'
+              workingDirectory:  automatedtesting/jmeter
               script: |
                 wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
                 tar -xzf apache-jmeter-5.6.3.tgz
