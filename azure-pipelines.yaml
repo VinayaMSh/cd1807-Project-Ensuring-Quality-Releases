@@ -243,14 +243,8 @@ stages:
                 export PATH=apache-jmeter-5.6.3/bin:$PATH
                 jmeter.sh --version
                 jmeter.sh -n -t Endurance-test.jmx -l enduranceResult.csv -j endurance_jmeter.log -e -o endurance_report
+                jmeter.sh -n -t StressTestSuite.jmx -l stressResult.csv -j stress_jmeter.log -e -o stress_report
 
-          - task: Bash@3
-            displayName: "Run Jmeter stress Tests"
-            inputs:
-              targetType: 'inline'
 
-              script: |
-                jmeter.sh -n -t StressTestSuite.jmx -l stressResult.csv -j stress_jmeter.log -e -o stress_report      
-             
    
   
