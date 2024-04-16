@@ -223,12 +223,21 @@ stages:
             displayName: 'Jmeter tests'
             inputs:
               targetType: 'inline'
-              workingDirectory:  automatedtesting/jmeter
               script: |
                 wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
                 tar -xzf apache-jmeter-5.6.3.tgz
                 ls -al apache-jmeter-5.6.3
-               # cat jmeter.log 
-          
+              
+          - task: Bash@3
+            displayName: "Run Stress Tests"
+            inputs:
+              targetType: 'inline'
+
+              script: |
+                export PATH=apache-jmeter-5.6.3/bin:$PATH
+                rm *.jtl
+                rm *.log
+                jmeter --version
+             
    
   
