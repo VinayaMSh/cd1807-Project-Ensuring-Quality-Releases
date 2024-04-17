@@ -32,14 +32,27 @@ def login (user, password):
     
     assert driver.current_url in url_after_login
     
-    print ('Adding Sauce Labs Backpack to cart')
-    driver.find_element(By.CSS_SELECTOR, "button[id='add-to-cart-sauce-labs-backpack']").click()
+    print("Testing adding to cart")
+    add_to_cart_btns = driver.find_elements(By.CLASS_NAME, "btn_inventory")
+
+    # Click six buttons to make the cart_value 6
+    for btns in add_to_cart_btns[:6]:
+        print(btns.get_attribute("name"))
+        btns.click()       
     time.sleep(1)
     
-    print ('Removing item from cart')
-    driver.find_element(By.CSS_SELECTOR, "button[id='remove-sauce-labs-backpack']").click()
+    # Check cart value to be 6 
+    cart_value = driver.find_element(By.CLASS_NAME, "shopping_cart_badge")
+    assert "6" in cart_value.text
     time.sleep(1)
     
-    
+    print("Testing remove items from cart")
+    remove_btns = driver.find_elements(By.CLASS_NAME, "btn_inventory")
+    for btns in remove_btns[:6]:      
+        print(btns.get_attribute("name"))
+        btns.click()
+    time.sleep(1)
+        
+     
 login('standard_user', 'secret_sauce')
 
