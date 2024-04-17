@@ -214,6 +214,7 @@ stages:
               script: |
                 unzip -o $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
                 python3 login_add_remove.py > seleniumTests.log
+                cat seleniumTests.log
              
           
           - download: current
