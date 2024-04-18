@@ -115,43 +115,10 @@ stages:
       displayName: 'Upload Package'
       artifact: drop-uitests
       
-    # Jmeter tests - Archive the package
-    - task: ArchiveFiles@2
-      displayName: 'Archive Jmeter TestSuite'
-      inputs:
-        rootFolderOrFile: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter/performancetests
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
-    # JMeter Test Suite - Publish    
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
-      displayName: 'Upload Package'
-      artifact: drop-perftests
+
 
    
-#--------------------------------------------#  
-
-# ------------------------------------------#    
-- stage: BuildFakeRestAPI
-  jobs:
-    - job: BuildFakeRestapi
-      displayName: 'Build and upload Fakerestapi'
-      pool: myProject3AgentPool
-      steps:
-      - task: ArchiveFiles@2
-        displayName: 'Archive Fakerestapi'
-        inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-          includeRootFolder: false
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-          verbose: true
-
-      
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-          ArtifactName: 'drop-fakerestapi'
-        displayName: 'Upload Package'
+#
         
 #--------------------------------------------#  
 # DEPLOYMENT STAGE
@@ -163,19 +130,7 @@ stages:
   - deployment: FakeRestAPI
     pool: myProject3AgentPool 
     environment: 'test-vm'
-    strategy:
-      runOnce:
-        deploy:
-        
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: 'Azure subscription 1(bfe3aaca-fcaa-4cf7-8823-0ada2a27d255)'  
-              #appName: 'myApplicationUdacity3-AppService' 
-              appName: 'fakerestapiWin'     
-              appType: 'webApp'
-              package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip' 
+       
 
  
   #--------------------------------------------#  
@@ -213,8 +168,8 @@ stages:
               targetType: 'inline'
               script: |
                 unzip -o $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
-                python3 login_add_remove.py > seleniumTests.log
-                cat seleniumTests.log
+                python3 login_add_remove.py > /home/azureuser/logs/selenium/seleniumTests.log
+                cat /home/azureuser/logs/selenium/seleniumTests.log
              
           
          
