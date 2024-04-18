@@ -60,4 +60,3 @@ def login (user, password):
         
      
 login('standard_user', 'secret_sauce')
-
