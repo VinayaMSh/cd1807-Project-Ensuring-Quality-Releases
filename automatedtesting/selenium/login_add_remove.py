@@ -3,11 +3,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
+import logging
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
 
 
 # Start the browser and login with standard_user
 def login (user, password):
-    print ('Starting the browser...')
+    logging.info('Starting the browser...')
     CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'
     WINDOW_SIZE = "1920,1080"
     chrome_options = webdriver.ChromeOptions()
@@ -17,27 +22,27 @@ def login (user, password):
     chrome_options.add_argument('--no-sandbox')
     driver = webdriver.Chrome(options=chrome_options )
     #driver = webdriver.Chrome()
-    print ('Browser started successfully. Navigating to the demo page to login.')
+    logging.info('Browser started successfully. Navigating to the demo page to login.')
     driver.get('https://www.saucedemo.com/')
     
     driver.find_element(By.CSS_SELECTOR, "input[id='user-name']").send_keys(user)
     driver.find_element(By.CSS_SELECTOR, "input[id='password']").send_keys(password)
     
-    print ('Loggig in ..')
+    logging.info('Loggig in ..')
     driver.find_element(By.CSS_SELECTOR, "input[id='login-button']").click()
     time.sleep(1) 
     
     url_after_login = "https://www.saucedemo.com/inventory.html" 
-    print(driver.current_url)
+    logging.info(driver.current_url)
     
     assert driver.current_url in url_after_login
     
-    print("Testing adding to cart")
+    logging.info("Testing adding to cart")
     add_to_cart_btns = driver.find_elements(By.CLASS_NAME, "btn_inventory")
 
     # Click six buttons to make the cart_value 6
     for btns in add_to_cart_btns[:6]:
-        print(btns.get_attribute("name"))
+        logging.info(btns.get_attribute("name"))
         btns.click()       
     time.sleep(1)
     
@@ -46,10 +51,10 @@ def login (user, password):
     assert "6" in cart_value.text
     time.sleep(1)
     
-    print("Testing remove items from cart")
+    logging.info("Testing remove items from cart")
     remove_btns = driver.find_elements(By.CLASS_NAME, "btn_inventory")
     for btns in remove_btns[:6]:      
-        print(btns.get_attribute("name"))
+        logging.info(btns.get_attribute("name"))
         btns.click()
     time.sleep(1)
         
