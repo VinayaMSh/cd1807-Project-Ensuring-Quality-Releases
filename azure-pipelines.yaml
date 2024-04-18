@@ -47,7 +47,7 @@ stages:
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: 'project_demo'
-        sshKeySecureFile: 'linuxVM-project3_key.pem'
+        sshKeySecureFile: 'linuxVMForProject3_key.pem'
     
     - task: TerraformTaskV4@4
       displayName: Terraform Apply
@@ -184,7 +184,7 @@ stages:
     displayName: Tests
     pool: myProject3AgentPool 
     environment:
-      name: 'test'
+      name: 'proj3'
       resourceType: VirtualMachine
     strategy:
       runOnce:
@@ -217,35 +217,4 @@ stages:
                 cat seleniumTests.log
              
           
-          - download: current
-            displayName: 'Download Jmeter performance tests'
-            artifact: drop-perftests
-
-          - task: Bash@3
-            displayName: Unpack jmeter Tests
-            inputs:
-              targetType: 'inline'
-              script: |
-                unzip -o $(Pipeline.Workspace)/drop-perftests/$(Build.BuildId)-perftests.zip -d .
-          - task: Bash@3
-            displayName: 'Jmeter tests'
-            inputs:
-              targetType: 'inline'
-              script: |
-                wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
-                tar -xzf apache-jmeter-5.6.3.tgz
-              
-          - task: Bash@3
-            displayName: "Run Jmeter endurance Tests"
-            inputs:
-              targetType: 'inline'
-
-              script: |
-                export PATH=apache-jmeter-5.6.3/bin:$PATH
-                jmeter.sh --version
-                jmeter.sh -n -t Endurance-test.jmx -l enduranceResult.csv -j endurance_jmeter.log -e -o endurance_report
-                jmeter.sh -n -t StressTestSuite.jmx -l stressResult.csv -j stress_jmeter.log -e -o stress_report
-
-
-   
-  
+         
