@@ -168,7 +168,7 @@ stages:
               targetType: 'inline'
               script: |
                 unzip -o $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
-                python3 login_add_remove.py  > /home/azureuser/logs/selenium/output.log.txt
+                python3 login_add_remove.py
                 cat /home/azureuser/logs/selenium/output.log.txt
              
           
